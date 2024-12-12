@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ticket Calculator</title>
+  <style>
+    /* General styling */
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #12232e;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 30px;
+      background: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      color: #8e432e;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    p#datetime {
+      font-size: 1rem;
+      color: #555;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      color: #333;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #8e44ad;
+      box-shadow: 0px 0px 8px rgba(142, 68, 173, 0.3);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #8e44ad;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: #6c3483;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 20px;
+      background: #d1f5d1;
+      border-radius: 8px;
+      color: #333;
+      font-size: 1.1rem;
+      font-weight: bold;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Ticket Calculator</h1>
+    <p id="datetime"></p>
+    <form id="calculator-form">
+      <label for="ticket">Number of Tickets:</label>
+      <input type="number" id="ticket" placeholder="Enter ticket count" required>
+      
+      <label for="amount">Amount Per Ticket (₹):</label>
+      <input type="number" id="amount" placeholder="Enter amount per ticket" required>
+      
+      <label for="free-ticket">Free Tickets:</label>
+      <input type="number" id="free-ticket" placeholder="Enter free tickets count" required>
+      
+      <label for="time">Select Time:</label>
+      <div style="display: flex; gap: 10px;">
+        <select id="hour" style="flex: 1;">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5" selected>5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+        </select>
+        <select id="ampm" style="flex: 1;">
+          <option value="Am">Am</option>
+          <option value="Pm" selected>Pm</option>
+        </select>
+      </div>
+      
+      <button type="button" id="calculate-btn">Calculate</button>
+    </form>
+    <div id="result" class="result"></div>
+  </div>
+  <script>
+    // Display current date and time
+    function updateDateTime() {
+    const now = new Date();
+    const options = { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric', 
+    hour: 'numeric', 
+    minute: 'numeric', 
+    second: 'numeric' 
+    };
+    document.getElementById('datetime').innerText = now.toLocaleString('en-US', options);
+    }
+    
+    // Call updateDateTime every second (1000ms)
+    setInterval(updateDateTime, 1000);
+    
+    // Initial call to display the time immediately when the page loads
+    updateDateTime();
+    
+    
+
+    // Calculation logic
+    document.getElementById('calculate-btn').addEventListener('click', function () {
+      const ticketCount = parseInt(document.getElementById('ticket').value) || 0;
+      const amountPerTicket = parseFloat(document.getElementById('amount').value) || 0;
+      const freeTickets = parseInt(document.getElementById('free-ticket').value) || 0;
+      const selectedHour = document.getElementById('hour').value;
+      const selectedAMPM = document.getElementById('ampm').value;
+
+      if (ticketCount > 0 && amountPerTicket > 0) {
+        const paidTickets = ticketCount - freeTickets;
+        const totalAmount = paidTickets * amountPerTicket;
+
+        document.getElementById('result').innerHTML = `
+          <p><strong>pung:</strong> ${selectedHour} ${selectedAMPM} gi</p>
+          <p><strong>Total Tickets=</strong> ${ticketCount}</p>
+          <p><strong>Free Tickets=</strong>${ticketCount} - ${freeTickets}</p>
+          
+          <p><strong>Paid Tickets:</strong> ${paidTickets} x ₹${amountPerTicket} </p>
+          <p><strong>Total Amount=</strong> ₹${totalAmount.toFixed(2)}</p>
+        `;
+      } else {
+        document.getElementById('result').innerHTML = `
+          <p style="color: red;">Please enter valid ticket and amount values!</p>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>
