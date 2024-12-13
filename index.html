@@ -3,197 +3,104 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ticket Calculator</title>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas"></script>
+  <title>Ticket Calculation</title>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <style>
-    /* General styling */
     body {
-      font-family: 'Arial', sans-serif;
-      background: #12232e;
-      color: #fff;
+      font-family: Arial, sans-serif;
+      background: #e3f2fd;
       margin: 0;
-      padding: 0;
+      padding: 20px;
     }
-
-    .container {
+    #calculator {
       max-width: 600px;
-      margin: 50px auto;
-      padding: 30px;
+      margin: 0 auto;
+      padding: 20px;
       background: #ffffff;
-      border-radius: 15px;
-      box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
-      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      color: #8e432e;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-    }
-
-    p#datetime {
-      font-size: 1rem;
-      color: #555;
-    }
-
-    form {
-      margin-top: 20px;
-    }
-
     label {
       display: block;
-      margin-bottom: 8px;
-      font-size: 1rem;
-      font-weight: bold;
-      color: #333;
+      margin: 10px 0 5px;
     }
-
-    input, select {
+    input {
       width: 100%;
-      padding: 12px;
-      margin-bottom: 20px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 1rem;
-      color: #333;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
     }
-
-    input:focus, select:focus {
-      outline: none;
-      border-color: #8e44ad;
-      box-shadow: 0px 0px 8px rgba(142, 68, 173, 0.3);
-    }
-
     button {
-      width: 100%;
-      padding: 12px;
-      background: #8e44ad;
+      padding: 10px 15px;
+      background: #007bff;
       color: white;
       border: none;
-      border-radius: 8px;
-      font-size: 1rem;
+      border-radius: 5px;
       cursor: pointer;
-      transition: all 0.3s ease;
     }
-
     button:hover {
-      background: #6c3483;
+      background: #0056b3;
     }
-
-    .result {
+    #result {
       margin-top: 20px;
       padding: 20px;
-      background: linear-gradient(120deg, #3b5998, #8b9dc3); /* Cool gradient background */
-      border-radius: 8px;
-      color: #ffffff; /* White text for contrast */
-      font-size: 1.2rem; /* Larger font size for readability */
-      font-weight: bold;
-      animation: fadeIn 0.5s ease;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Shadow for text clarity */
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Ticket Calculator</h1>
-    <p id="datetime"></p>
-    <form id="calculator-form">
-      <label for="ticket">Number of Tickets:</label>
-      <input type="number" id="ticket" placeholder="Enter ticket count" required>
-      
-      <label for="amount">Amount Per Ticket (₹):</label>
-      <input type="number" id="amount" placeholder="Enter amount per ticket" required>
-      
-      <label for="free-ticket">Free Tickets:</label>
-      <input type="number" id="free-ticket" placeholder="Enter free tickets count" required>
-      
-      <label for="time">Select Time:</label>
-      <div style="display: flex; gap: 10px;">
-        <select id="hour" style="flex: 1;">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5" selected>5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-          <option value="11">11</option>
-          <option value="12">12</option>
-        </select>
-        <select id="ampm" style="flex: 1;">
-          <option value="Am">Am</option>
-          <option value="Pm" selected>Pm</option>
-        </select>
-      </div>
-      
-      <button type="button" id="calculate-btn">Calculate</button>
-    </form>
-    <div id="result" class="result"></div>
-    <button type="button" id="share-btn">Share</button>
+  <div id="calculator">
+    <h2>Ticket Calculator</h2>
+    <label for="ticketCount">Total Tickets:</label>
+    <input type="number" id="ticketCount" placeholder="Enter total tickets" />
+
+    <label for="freeTickets">Free Tickets:</label>
+    <input type="number" id="freeTickets" placeholder="Enter free tickets" />
+
+    <label for="amountPerTicket">Amount Per Ticket (₹):</label>
+    <input type="number" id="amountPerTicket" placeholder="Enter amount per ticket" />
+
+    <label for="time">Time (e.g., 5 PM):</label>
+    <input type="text" id="time" placeholder="Enter time" />
+
+    <button id="calculate-btn">Calculate</button>
+    <button id="share-btn">Share</button>
+
+    <div id="result"></div>
   </div>
+
   <script>
-    // Display current date and time
-    function updateDateTime() {
-      const now = new Date();
-      const options = { 
-        weekday: 'long', 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric', 
-        hour: 'numeric', 
-        minute: 'numeric', 
-        second: 'numeric' 
-      };
-      document.getElementById('datetime').innerText = now.toLocaleString('en-US', options);
-    }
-
-    setInterval(updateDateTime, 1000);
-    updateDateTime();
-
-    // Calculation logic
     document.getElementById('calculate-btn').addEventListener('click', function () {
-      const ticketCount = parseInt(document.getElementById('ticket').value) || 0;
-      const amountPerTicket = parseFloat(document.getElementById('amount').value) || 0;
-      const freeTickets = parseInt(document.getElementById('free-ticket').value) || 0;
-      const selectedHour = document.getElementById('hour').value;
-      const selectedAMPM = document.getElementById('ampm').value;
+      const ticketCount = parseInt(document.getElementById('ticketCount').value) || 0;
+      const freeTickets = parseInt(document.getElementById('freeTickets').value) || 0;
+      const amountPerTicket = parseFloat(document.getElementById('amountPerTicket').value) || 0;
+      const time = document.getElementById('time').value;
 
-      if (ticketCount > 0 && amountPerTicket > 0) {
-        const paidTickets = ticketCount - freeTickets;
-        const totalAmount = paidTickets * amountPerTicket;
+      const paidTickets = ticketCount - freeTickets;
+      const totalAmount = paidTickets * amountPerTicket;
 
-        document.getElementById('result').innerHTML = `
-          <p><strong>pung:</strong> ${selectedHour} ${selectedAMPM} gi</p>
-          <p><strong>Total Tickets=</strong> ${ticketCount}</p>
-          <p><strong>Free Tickets=</strong>${ticketCount} - ${freeTickets}</p>
-          <p><strong>Paid Tickets:</strong> ${paidTickets} x ₹${amountPerTicket} </p>
-          <p><strong>Total Amount=</strong> ₹${totalAmount.toFixed(2)}</p>
-        `;
-      } else {
-        document.getElementById('result').innerHTML = `
-          <p style="color: red;">Please enter valid ticket and amount values!</p>
-        `;
-      }
+      document.getElementById('result').innerHTML = `
+        <p><strong>Time:</strong> ${time}</p>
+        <p><strong>Total Tickets:</strong> ${ticketCount}</p>
+        <p><strong>Free Tickets:</strong> ${freeTickets}</p>
+        <p><strong>Paid Tickets:</strong> ${paidTickets} x ₹${amountPerTicket}</p>
+        <p><strong>Total Amount:</strong> ₹${totalAmount.toFixed(2)}</p>
+      `;
     });
 
-    // Sharing logic
     document.getElementById('share-btn').addEventListener('click', function () {
       const resultDiv = document.getElementById('result');
+
+      // Temporarily style resultDiv for better image rendering
+      resultDiv.style.background = "linear-gradient(120deg, #6a11cb, #2575fc)"; // Gradient background
+      resultDiv.style.color = "#fff"; // White text color for visibility
+      resultDiv.style.padding = "20px"; // Add padding for a better layout
+      resultDiv.style.borderRadius = "10px"; // Rounded corners
+
       html2canvas(resultDiv, { scale: 3 }).then(canvas => {
         canvas.toBlob(blob => {
           const file = new File([blob], 'calculation.png', { type: 'image/png' });
@@ -208,6 +115,14 @@
           }
         });
       });
+
+      // Restore original styling (optional)
+      setTimeout(() => {
+        resultDiv.style.background = ""; // Reset background
+        resultDiv.style.color = ""; // Reset text color
+        resultDiv.style.padding = ""; // Reset padding
+        resultDiv.style.borderRadius = ""; // Reset border radius
+      }, 1000);
     });
   </script>
 </body>
