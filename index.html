@@ -6,49 +6,113 @@
   <title>Ticket Calculation</title>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <style>
+    /* Global Styles */
     body {
-      font-family: Arial, sans-serif;
-      background: #e3f2fd;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(120deg, #89f7fe, #66a6ff);
       margin: 0;
-      padding: 20px;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #333;
     }
+
+    /* Card Container */
     #calculator {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
       background: #ffffff;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
+      padding: 20px 30px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      max-width: 400px;
+      width: 100%;
+      animation: fadeIn 1s ease-in-out;
     }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #007bff;
+    }
+
     label {
       display: block;
+      font-weight: bold;
       margin: 10px 0 5px;
     }
+
     input {
       width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      transition: border 0.3s ease, box-shadow 0.3s ease;
     }
+
+    input:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+      outline: none;
+    }
+
     button {
-      padding: 10px 15px;
-      background: #007bff;
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      background: linear-gradient(90deg, #007bff, #0056b3);
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
       cursor: pointer;
+      transition: background 0.3s ease;
     }
+
     button:hover {
-      background: #0056b3;
+      background: linear-gradient(90deg, #0056b3, #003c82);
     }
+
     #result {
       margin-top: 20px;
       padding: 20px;
-      background: #f9f9f9;
+      background: #f0f8ff;
       border: 1px solid #ddd;
       border-radius: 10px;
+      text-align: center;
+      animation: slideIn 1s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Add gradient and subtle glow for shareable image */
+    .shareable {
+      background: linear-gradient(120deg, #ff9a9e, #fad0c4);
+      color: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(255, 154, 158, 0.5);
     }
   </style>
 </head>
@@ -95,11 +159,8 @@
     document.getElementById('share-btn').addEventListener('click', function () {
       const resultDiv = document.getElementById('result');
 
-      // Temporarily style resultDiv for better image rendering
-      resultDiv.style.background = "linear-gradient(120deg, #6a11cb, #2575fc)"; // Gradient background
-      resultDiv.style.color = "#fff"; // White text color for visibility
-      resultDiv.style.padding = "20px"; // Add padding for a better layout
-      resultDiv.style.borderRadius = "10px"; // Rounded corners
+      // Apply shareable styles temporarily
+      resultDiv.classList.add('shareable');
 
       html2canvas(resultDiv, { scale: 3 }).then(canvas => {
         canvas.toBlob(blob => {
@@ -116,13 +177,8 @@
         });
       });
 
-      // Restore original styling (optional)
-      setTimeout(() => {
-        resultDiv.style.background = ""; // Reset background
-        resultDiv.style.color = ""; // Reset text color
-        resultDiv.style.padding = ""; // Reset padding
-        resultDiv.style.borderRadius = ""; // Reset border radius
-      }, 1000);
+      // Remove the shareable styles
+      setTimeout(() => resultDiv.classList.remove('shareable'), 1000);
     });
   </script>
 </body>
