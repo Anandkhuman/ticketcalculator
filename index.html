@@ -91,6 +91,11 @@
       animation: fadeIn 0.5s ease;
     }
 
+    .share-btn {
+      margin-top: 15px;
+      display: none;
+    }
+
     @keyframes fadeIn {
       from {
         opacity: 0;
@@ -142,21 +147,24 @@
       <button type="button" id="calculate-btn">Calculate</button>
     </form>
     <div id="result" class="result"></div>
+    <button id="share-btn" class="share-btn">Share Result</button>
   </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script>
     // Display current date and time
     function updateDateTime() {
-    const now = new Date();
-    const options = { 
-    weekday: 'long', 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric', 
-    hour: 'numeric', 
-    minute: 'numeric', 
-    second: 'numeric' 
-    };
-    document.getElementById('datetime').innerText = now.toLocaleString('en-US', options);
+      const now = new Date();
+      const options = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric', 
+        hour: 'numeric', 
+        minute: 'numeric', 
+        second: 'numeric' 
+      };
+      document.getElementById('datetime').innerText = now.toLocaleString('en-US', options);
     }
     
     // Call updateDateTime every second (1000ms)
@@ -165,8 +173,6 @@
     // Initial call to display the time immediately when the page loads
     updateDateTime();
     
-    
-
     // Calculation logic
     document.getElementById('calculate-btn').addEventListener('click', function () {
       const ticketCount = parseInt(document.getElementById('ticket').value) || 0;
@@ -180,18 +186,41 @@
         const totalAmount = paidTickets * amountPerTicket;
 
         document.getElementById('result').innerHTML = `
-          <p><strong>pung:</strong> ${selectedHour} ${selectedAMPM} gi</p>
-          <p><strong>Total Tickets=</strong> ${ticketCount}</p>
-          <p><strong>Free Tickets=</strong>${ticketCount} - ${freeTickets}</p>
-          
-          <p><strong>Paid Tickets:</strong> ${paidTickets} x ₹${amountPerTicket} </p>
-          <p><strong>Total Amount=</strong> ₹${totalAmount.toFixed(2)}</p>
+          <p><strong>Time:</strong> ${selectedHour} ${selectedAMPM}</p>
+          <p><strong>Total Tickets:</strong> ${ticketCount}</p>
+          <p><strong>Free Tickets:</strong> ${freeTickets}</p>
+          <p><strong>Paid Tickets:</strong> ${paidTickets}</p>
+          <p><strong>Total Amount:</strong> ₹${totalAmount.toFixed(2)}</p>
         `;
+
+        // Show share button
+        document.getElementById('share-btn').style.display = 'block';
       } else {
         document.getElementById('result').innerHTML = `
           <p style="color: red;">Please enter valid ticket and amount values!</p>
         `;
+        document.getElementById('share-btn').style.display = 'none';
       }
+    });
+
+    // Share logic
+    document.getElementById('share-btn').addEventListener('click', function () {
+      const resultDiv = document.getElementById('result');
+      html2canvas(resultDiv).then(canvas => {
+        canvas.toBlob(blob => {
+          const file = new File([blob], 'calculation.png', { type: 'image/png' });
+
+          if (navigator.share) {
+            navigator.share({
+              files: [file],
+              title: 'Calculation Result',
+              text: 'Here is the ticket calculation result:'
+            }).catch(err => console.error('Sharing failed', err));
+          } else {
+            alert('Web Share API is not supported in your browser.');
+          }
+        });
+      });
     });
   </script>
 </body>
