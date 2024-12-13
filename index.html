@@ -4,11 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ticket Calculator</title>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas"></script>
   <style>
+    /* General styling */
     body {
       font-family: 'Arial', sans-serif;
-      background: linear-gradient(120deg, #4facfe, #00f2fe); /* Cool gradient background */
-      color: #ffffff; /* White text for contrast */
+      background: #12232e;
+      color: #fff;
       margin: 0;
       padding: 0;
     }
@@ -17,7 +19,7 @@
       max-width: 600px;
       margin: 50px auto;
       padding: 30px;
-      background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+      background: #ffffff;
       border-radius: 15px;
       box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
       text-align: center;
@@ -26,13 +28,17 @@
     h1 {
       font-size: 2.5rem;
       margin-bottom: 10px;
-      color: #4facfe; /* Gradient's primary color for text */
+      color: #8e432e;
       text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
     }
 
     p#datetime {
       font-size: 1rem;
       color: #555;
+    }
+
+    form {
+      margin-top: 20px;
     }
 
     label {
@@ -55,14 +61,14 @@
 
     input:focus, select:focus {
       outline: none;
-      border-color: #4facfe;
-      box-shadow: 0px 0px 8px rgba(79, 172, 254, 0.3);
+      border-color: #8e44ad;
+      box-shadow: 0px 0px 8px rgba(142, 68, 173, 0.3);
     }
 
     button {
       width: 100%;
       padding: 12px;
-      background: #4facfe; /* Button with gradient color */
+      background: #8e44ad;
       color: white;
       border: none;
       border-radius: 8px;
@@ -72,23 +78,19 @@
     }
 
     button:hover {
-      background: #00f2fe; /* Secondary gradient color on hover */
+      background: #6c3483;
     }
 
     .result {
       margin-top: 20px;
       padding: 20px;
-      background: linear-gradient(120deg, #8e44ad, #3498db); /* Cool gradient for image generation */
+      background: linear-gradient(120deg, #3b5998, #8b9dc3); /* Cool gradient background */
       border-radius: 8px;
       color: #ffffff; /* White text for contrast */
-      font-size: 1.1rem;
+      font-size: 1.2rem; /* Larger font size for readability */
       font-weight: bold;
       animation: fadeIn 0.5s ease;
-    }
-
-    .share-btn {
-      margin-top: 15px;
-      display: none;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Shadow for text clarity */
     }
 
     @keyframes fadeIn {
@@ -142,10 +144,8 @@
       <button type="button" id="calculate-btn">Calculate</button>
     </form>
     <div id="result" class="result"></div>
-    <button id="share-btn" class="share-btn">Share Result</button>
+    <button type="button" id="share-btn">Share</button>
   </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script>
     // Display current date and time
     function updateDateTime() {
@@ -161,11 +161,10 @@
       };
       document.getElementById('datetime').innerText = now.toLocaleString('en-US', options);
     }
-    
-    // Call updateDateTime every second
+
     setInterval(updateDateTime, 1000);
-    updateDateTime(); // Initial call
-    
+    updateDateTime();
+
     // Calculation logic
     document.getElementById('calculate-btn').addEventListener('click', function () {
       const ticketCount = parseInt(document.getElementById('ticket').value) || 0;
@@ -185,23 +184,19 @@
           <p><strong>Paid Tickets:</strong> ${paidTickets} x ₹${amountPerTicket} </p>
           <p><strong>Total Amount=</strong> ₹${totalAmount.toFixed(2)}</p>
         `;
-
-        document.getElementById('share-btn').style.display = 'block';
       } else {
         document.getElementById('result').innerHTML = `
           <p style="color: red;">Please enter valid ticket and amount values!</p>
         `;
-        document.getElementById('share-btn').style.display = 'none';
       }
     });
 
-    // Share logic
+    // Sharing logic
     document.getElementById('share-btn').addEventListener('click', function () {
       const resultDiv = document.getElementById('result');
-      html2canvas(resultDiv).then(canvas => {
+      html2canvas(resultDiv, { scale: 3 }).then(canvas => {
         canvas.toBlob(blob => {
           const file = new File([blob], 'calculation.png', { type: 'image/png' });
-
           if (navigator.share) {
             navigator.share({
               files: [file],
